@@ -10,20 +10,15 @@ use Tests\TestCase;
 class PostManagementTest extends TestCase
 {
     use RefreshDatabase;
-    public function test_a_post_can_be_retrieved(){
 
-         $this->withoutExceptionHandling();
-
+    public function test_a_post_can_be_retrieved()
+    {
           $post = factory(Post::class)->create();
 
-          $response = $this->get('/posts/' . $post->id);
-  
-          $response -> assertOk();
-          $post = Post::first();
-
-          $response->assertViewIs('posts.show');
-          $response->assertViewHas('post',$post);
-     
+          $this->get('/posts/'.$post->id)
+               ->assertOk()
+               ->assertViewIs('posts.show')
+               ->assertViewHas('post', $post);
     }
 
     public function test_list_of_posts_can_be_retrieved(){
@@ -81,7 +76,7 @@ class PostManagementTest extends TestCase
  
         $post = $post->fresh();
 
-        $this->assertEquals($post->title,'Test Title');
+        $this->assertEquals($post->fresh()->title,'Test Title');
         $this->assertEquals($post->content,'Test Content');
 
         $response->assertRedirect('/posts/' . $post->id);
@@ -96,7 +91,7 @@ class PostManagementTest extends TestCase
 
         $response = $this->delete('/posts/' . $post->id) ;
 
-        $this->assertCount(0,Post::all());
+        $this->assertCount(0, Post::all());
 
         $response->assertRedirect('/posts');
 
