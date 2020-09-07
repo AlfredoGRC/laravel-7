@@ -10,23 +10,16 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testBasicTest()
+
+    /** @test */
+    public function view_games_index()
     {
-         $this->withOutExceptionHandling();
          $gamer = factory(Gamer::class)->state('published')->times(4)->create()->first();
-    
+
          $this->get('/juegos')
               ->assertSuccessful()
               ->assertViewIs('gamers.index')
               ->assertViewHas('gamers', fn ($gamers) => $gamers->count() === 4)
               ->assertSee($gamer->name);
-
-             
-        
     }
 }
